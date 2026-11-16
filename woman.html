@@ -71,12 +71,12 @@
     <section class="card positive" aria-labelledby="positive-title">
       <div class="card-head"><div><h2 id="positive-title">Достоинства</h2><p class="hint">Выберите одно качество</p></div><span class="badge">+ Плюс</span></div>
       <div class="options-window"><div id="positive-options" class="options" role="radiogroup" aria-labelledby="positive-title"></div></div>
-      <button class="next" id="positive-next" type="button">Далее</button>
+      <button class="next" id="positive-next" type="button">Далее, если ничего не подходит</button>
     </section>
     <section class="card negative" aria-labelledby="negative-title">
       <div class="card-head"><div><h2 id="negative-title">Недостатки</h2><p class="hint">Выберите одно качество</p></div><span class="badge">− Минус</span></div>
       <div class="options-window"><div id="negative-options" class="options" role="radiogroup" aria-labelledby="negative-title"></div></div>
-      <button class="next" id="negative-next" type="button">Далее</button>
+      <button class="next" id="negative-next" type="button">Далее, если ничего не подходит</button>
     </section>
   </div>
   <div class="progress"><span id="progress"></span><span id="pairs-count"></span></div>
@@ -153,7 +153,7 @@
       if (!items.length) nodes[type].textContent = 'Варианты закончились.';
       const exhausted = (pages[type] + 1) * pageSize >= source.length;
       nextButtons[type].disabled = exhausted;
-      nextButtons[type].textContent = exhausted ? 'Свойств больше нет' : 'Далее';
+      nextButtons[type].textContent = exhausted ? 'Свойств больше нет' : 'Далее, если ничего не подходит';
     }
     nodes.progress.textContent = `Слева ${positivePage.length}, справа ${negativePage.length} вариантов`;
     nodes.count.textContent = `Выбрано пар: ${pairs.length}`;
