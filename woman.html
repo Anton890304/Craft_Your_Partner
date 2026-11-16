@@ -43,6 +43,8 @@
     button { border: 1px solid #695d70; color: white; background: transparent; border-radius: 9px; padding: 9px 12px; font: inherit; font-size: 13px; cursor: pointer; }
     button:hover { background: #493e50; }
     button:disabled { opacity: .45; cursor: default; }
+    #story { background: #d38bff; border-color: #d38bff; color: #24122d; font-weight: 700; }
+    #story:hover:not(:disabled) { background: #e0aaff; border-color: #e0aaff; }
     .names { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
     .names label { display: grid; gap: 6px; flex: 1 1 160px; color: #ddd2df; font-size: 13px; }
     .names input { width: 100%; height: auto; min-height: 40px; padding: 9px 11px; border: 1px solid #695d70; border-radius: 9px; background: #413648; color: white; font: inherit; }
@@ -85,7 +87,7 @@
   </div>
   <div class="progress"><span id="progress"></span><span id="pairs-count"></span></div>
   <section class="card result" aria-labelledby="result-title">
-    <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="story" type="button" disabled>Создать историю с ИИ</button><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
+    <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="story" type="button" disabled>🤖 Создать историю с ИИ</button><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
     <div class="names"><label>Ваше имя <input id="your-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="given-name"></label><label>Имя вашей партнёрши <input id="partner-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="off"></label></div>
     <div id="result" class="result-text empty" aria-live="polite">Пока здесь пусто. Выберите по одному качеству в каждой колонке.</div>
     <p class="status" id="status" role="status"></p>
