@@ -43,6 +43,10 @@
     button { border: 1px solid #695d70; color: white; background: transparent; border-radius: 9px; padding: 9px 12px; font: inherit; font-size: 13px; cursor: pointer; }
     button:hover { background: #493e50; }
     button:disabled { opacity: .45; cursor: default; }
+    .names { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .names label { display: grid; gap: 6px; flex: 1 1 160px; color: #ddd2df; font-size: 13px; }
+    .names input { width: 100%; height: auto; min-height: 40px; padding: 9px 11px; border: 1px solid #695d70; border-radius: 9px; background: #413648; color: white; font: inherit; }
+    .names input::placeholder { color: #b9adbd; }
     .status { min-height: 20px; margin: 12px 0 0; font-size: 13px; color: #d9ccd9; }
     .progress { display: flex; justify-content: space-between; gap: 10px; margin: 18px 0 0; color: #8b828d; font-size: 13px; }
     @media (max-width: 700px) {
@@ -82,6 +86,7 @@
   <div class="progress"><span id="progress"></span><span id="pairs-count"></span></div>
   <section class="card result" aria-labelledby="result-title">
     <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="story" type="button" disabled>Создать историю с ИИ</button><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
+    <div class="names"><label>Ваше имя <input id="your-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="given-name"></label><label>Имя вашего партнёра <input id="partner-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="off"></label></div>
     <div id="result" class="result-text empty" aria-live="polite">Пока здесь пусто. Выберите по одному качеству в каждой колонке.</div>
     <p class="status" id="status" role="status"></p>
   </section>
@@ -163,7 +168,10 @@
     document.getElementById('story').disabled = !pairs.length;
   }
   document.getElementById('story').addEventListener('click', () => {
-    const prompt = `Напиши увлекательную и забавную историю любви двух взрослых: парня с перечисленными ниже качествами и девушки, не называя её имени. Используй выбранные качества как материал для сюжета, а не просто перечисляй их. Добавь юмор, трогательные моменты, неожиданный поворот и немного пикантности без откровенных подробностей. Уважительно обращайся с чувствительными особенностями персонажей. Качества: ${pairs.join(' ')}`;
+    const yours = document.getElementById('your-name').value.trim();
+    const partner = document.getElementById('partner-name').value.trim();
+    const characters = `мужчины${yours ? ` по имени ${yours}` : ' без указанного имени'}, который встретил девушку${partner ? ` по имени ${partner}` : ' без указанного имени'}. Перечисленные качества относятся к мужчине`;
+    const prompt = `Напиши увлекательную и забавную историю любви двух взрослых: ${characters}. Если имя персонажа не указано, не придумывай ему имя. Используй выбранные качества как материал для сюжета, а не просто перечисляй их. Добавь юмор, трогательные моменты, неожиданный поворот и немного пикантности без откровенных подробностей. Уважительно обращайся с чувствительными особенностями персонажей. Качества: ${pairs.join(' ')}`;
     const url = new URL('https://www.google.com/search');
     url.searchParams.set('udm', '50');
     url.searchParams.set('q', prompt);
