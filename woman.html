@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Конструктор качеств партнёрши</title>
+  <style>
+    :root { color-scheme: light; font-family: "Segoe UI", Arial, sans-serif; color: #282336; background: #f6f3f5; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { width: min(1100px, calc(100% - 40px)); margin: 0 auto; padding: 50px 0 70px; }
+    .eyebrow { color: #9b566a; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { margin: 10px 0; font-family: Georgia, serif; font-size: clamp(32px, 5vw, 48px); font-weight: 400; letter-spacing: -.035em; }
+    .intro { color: #746d79; line-height: 1.6; max-width: 680px; margin: 0 0 30px; }
+    .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .card { background: white; border: 1px solid #eae5e9; border-radius: 18px; padding: 25px; box-shadow: 0 8px 28px #34203808; }
+    .card-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; padding-bottom: 17px; border-bottom: 1px solid #eee9ed; }
+    h2 { font-size: 20px; margin: 0 0 5px; }
+    .hint { margin: 0; color: #8b828d; font-size: 13px; line-height: 1.45; }
+    .badge { flex: none; background: #f8edf1; color: #a15b70; border-radius: 99px; padding: 6px 10px; font-size: 12px; font-weight: 600; }
+    .negative .badge { background: #f0eef8; color: #756390; }
+    .options-window { overflow: hidden; }
+    .options { display: grid; gap: 4px; padding-top: 13px; }
+    .options.leaving { animation: slide-out .38s ease-in both; pointer-events: none; }
+    .options.entering { animation: slide-in .42s ease-out both; }
+    @keyframes slide-out { to { transform: translateY(-100%); opacity: .25; } }
+    @keyframes slide-in { from { transform: translateY(100%); opacity: .25; } to { transform: translateY(0); opacity: 1; } }
+    .option { display: flex; align-items: center; gap: 12px; padding: 10px 11px; min-height: 42px; border-radius: 9px; cursor: pointer; line-height: 1.35; background: var(--option-color); transition: filter .15s, box-shadow .15s; }
+    .option:hover { filter: saturate(1.4) brightness(.97); }
+    .option:has(input:checked) { box-shadow: inset 0 0 0 2px #b76e85; }
+    .negative .option:has(input:checked) { box-shadow: inset 0 0 0 2px #8a78aa; }
+    input { width: 18px; height: 18px; flex: none; margin: 0; accent-color: #b76e85; }
+    .negative input { accent-color: #8a78aa; }
+    .next { width: 100%; margin-top: 12px; color: #756577; border-color: #e1d8df; }
+    .next:hover:not(:disabled) { background: #f6f0f4; }
+    input:focus-visible, button:focus-visible { outline: 3px solid #c19bb0; outline-offset: 3px; }
+    .result { margin-top: 18px; background: #30283a; color: white; border: 0; padding: 27px; }
+    .result .hint { color: #c3bac8; }
+    .result-head { display: flex; justify-content: space-between; align-items: start; gap: 15px; }
+    .result-text { color: #fff; line-height: 1.8; font-size: 17px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .empty { color: #b9adbd; }
+    .actions { display: flex; flex-wrap: wrap; gap: 9px; }
+    button { border: 1px solid #695d70; color: white; background: transparent; border-radius: 9px; padding: 9px 12px; font: inherit; font-size: 13px; cursor: pointer; }
+    button:hover { background: #493e50; }
+    button:disabled { opacity: .45; cursor: default; }
+    .status { min-height: 20px; margin: 12px 0 0; font-size: 13px; color: #d9ccd9; }
+    .progress { display: flex; justify-content: space-between; gap: 10px; margin: 18px 0 0; color: #8b828d; font-size: 13px; }
+    @media (max-width: 700px) {
+      main { width: calc(100% - 20px); padding-top: 25px; }
+      .columns { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; align-items: start; }
+      .card { padding: 12px; border-radius: 13px; }
+      .card-head { display: block; padding-bottom: 10px; }
+      .card-head h2 { font-size: 16px; overflow-wrap: anywhere; }
+      .card-head .hint { font-size: 12px; }
+      .card-head .badge { display: none; }
+      .option { position: relative; min-height: 48px; padding: 10px; font-size: 13px; overflow-wrap: anywhere; }
+      .option input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+      .option:has(input:focus-visible) { outline: 3px solid #c19bb0; outline-offset: 2px; }
+      .result { padding: 19px; }
+      .result-head { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) { .options.leaving, .options.entering { animation: none; } }
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Интерактивный тренажёр</div>
+  <h1>Конструктор качеств партнёрши</h1>
+  <p class="intro">Выберите одно достоинство и один недостаток женщины. Пара появится внизу, а списки обновятся автоматически. Здесь нет правильных ответов — важны ваши предпочтения.</p>
+  <div class="columns">
+    <section class="card positive" aria-labelledby="positive-title">
+      <div class="card-head"><div><h2 id="positive-title">Достоинства</h2><p class="hint">Выберите одно качество</p></div><span class="badge">+ Плюс</span></div>
+      <div class="options-window"><div id="positive-options" class="options" role="radiogroup" aria-labelledby="positive-title"></div></div>
+      <button class="next" id="positive-next" type="button">Далее</button>
+    </section>
+    <section class="card negative" aria-labelledby="negative-title">
+      <div class="card-head"><div><h2 id="negative-title">Недостатки</h2><p class="hint">Выберите одно качество</p></div><span class="badge">− Минус</span></div>
+      <div class="options-window"><div id="negative-options" class="options" role="radiogroup" aria-labelledby="negative-title"></div></div>
+      <button class="next" id="negative-next" type="button">Далее</button>
+    </section>
+  </div>
+  <div class="progress"><span id="progress"></span><span id="pairs-count"></span></div>
+  <section class="card result" aria-labelledby="result-title">
+    <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
+    <div id="result" class="result-text empty" aria-live="polite">Пока здесь пусто. Выберите по одному качеству в каждой колонке.</div>
+    <p class="status" id="status" role="status"></p>
+  </section>
+</main>
+<script>
+  // Снимок данных из соседних текстовых файлов позволяет открыть страницу напрямую, без сервера.
+  const positiveSource = ["Красивая", "обаятельная", "милая", "эффектная", "привлекательная без макияжа", "с выразительными глазами", "с очаровательной улыбкой", "с приятным голосом", "со звонким смехом", "с длинными волосами", "с короткой стрижкой", "с кудрявыми волосами", "с естественным цветом волос", "с ярким цветом волос", "миниатюрная", "высокая", "ниже тебя", "выше тебя", "стройная", "спортивная", "подтянутая", "с пышными формами", "пухленькая", "с мягкими чертами лица", "с веснушками", "с татуировками", "без татуировок", "элегантная", "стильно одевается", "любит платья", "предпочитает удобную одежду", "приятно пахнет", "ухоженная", "выглядит моложе своих лет", "зрелой внешности", "младше тебя", "твоя ровесница", "старше тебя", "женственная", "харизматичная", "сексуально привлекательная", "энергичная", "пластичная", "грациозная", "хорошо танцует", "любит обниматься", "ласковая", "нежная", "страстная", "романтичная", "любит целоваться", "умеет флиртовать", "сама проявляет романтическую инициативу", "открыто показывает симпатию", "умеет создавать атмосферу близости", "умеет говорить о своих желаниях", "внимательна к твоим желаниям в постели", "уважает согласие и границы в сексе", "заботится о контрацепции", "открыта к экспериментам по взаимному желанию", "обладает высоким либидо", "предпочитает спокойный ритм интимной жизни", "готова обсуждать сексуальное здоровье", "любит делать комплименты", "искренне восхищается партнёром", "замечает твои старания", "умеет благодарить", "радуется твоим успехам", "поддерживает в трудные времена", "умеет выслушать без осуждения", "умеет утешить", "верная", "преданная", "надёжная", "честная", "искренняя", "открытая", "доброжелательная", "заботливая", "чуткая", "внимательная", "отзывчивая", "сострадательная", "терпеливая", "мягкая", "щедрая", "великодушная", "тактичная", "деликатная", "справедливая", "порядочная", "уважительная", "умеет доверять", "уважает твоё личное пространство", "не ревнует без повода", "уважает твоих друзей", "поддерживает твои увлечения", "уважает твоё право на отдых", "принимает твою уязвимость", "умеет говорить о чувствах", "эмоционально зрелая", "спокойная", "уравновешенная", "стрессоустойчивая", "оптимистичная", "жизнерадостная", "весёлая", "остроумная", "с хорошим чувством юмора", "умеет смеяться над собой", "понимает иронию", "разделяет твоё чувство юмора", "умеет разрядить напряжённую обстановку", "любит дурачиться", "уверенная в себе", "скромная", "самостоятельная", "решительная", "смелая", "инициативная", "гибкая в новых обстоятельствах", "умеет просить о помощи", "умеет принимать отказ", "уважает чужие границы", "умеет защищать свои границы", "признаёт свои ошибки", "умеет извиняться", "умеет прощать", "держит слово", "пунктуальная", "ответственная", "организованная", "умеет договариваться", "обсуждает проблемы прямо", "конструктивно разрешает конфликты", "не унижает в ссоре", "готова работать над отношениями", "готова обращаться к психологу", "уважает твоё мнение", "воспринимает тебя как равного", "разделяет домашние обязанности", "умеет распределять бытовые задачи", "бережно относится к общим деньгам", "умеет планировать бюджет", "имеет накопления", "имеет финансовую подушку", "финансово независимая", "имеет стабильный доход", "имеет хорошую работу", "успешно строит карьеру", "увлечена своим делом", "предприимчивая", "имеет собственный бизнес", "владеет автомобилем", "владеет недвижимостью", "живёт отдельно от родителей", "умеет водить автомобиль", "умеет готовить", "любит готовить вместе", "умеет печь", "поддерживает уют дома", "умеет организовать совместный отдых", "умеет делать массаж", "умеет оказывать первую помощь", "заботится о своём здоровье", "не курит", "не употребляет алкоголь", "умеренно употребляет алкоголь", "не употребляет наркотики", "любит активный отдых", "любит путешествовать", "любит природу", "любит домашний уют", "любит спонтанные приключения", "предпочитает размеренный образ жизни", "любит кино", "любит читать", "интересуется искусством", "интересуется наукой", "любит музыку", "умеет играть на музыкальном инструменте", "красиво поёт", "любит настольные игры", "любит видеоигры", "интересуется автомобилями", "интересуется спортом", "любит рыбалку", "любит походы", "разделяет твои увлечения", "имеет собственные интересы", "готова пробовать новое вместе", "любознательная", "образованная", "начитанная", "эрудированная", "умная", "сообразительная", "мудрая", "рассудительная", "наблюдательная", "творческая", "изобретательная", "умеет критически мыслить", "умеет объяснять сложное простыми словами", "знает иностранные языки", "имеет чувство вкуса", "умеет вдохновлять", "амбициозная", "целеустремлённая", "трудолюбивая", "умеет доводить начатое до конца", "любит животных", "заботится о домашних питомцах", "любит детей", "умеет общаться с детьми", "хочет детей", "не хочет детей", "готова к усыновлению", "уже имеет детей", "не имеет детей", "вовлечённая мать", "готова принять твоих детей", "хочет создать семью", "готова к серьёзным отношениям", "готова к моногамии", "открыта к немоногамным отношениям по взаимной договорённости", "готова обсуждать формат отношений", "была замужем", "не была замужем", "достойно пережила развод", "сохраняет уважительные отношения с бывшим партнёром", "не общается с бывшими", "свободна от незавершённых отношений", "имеет тёплые отношения с семьёй", "умеет выстраивать границы с родственниками", "уважительно относится к твоей семье", "имеет надёжных друзей", "умеет поддерживать дружбу", "пользуется уважением окружающих", "имеет полезные профессиональные связи", "гостеприимная", "легко находит общий язык с твоими друзьями", "уважительно общается с обслуживающим персоналом", "участвует в благотворительности", "готова к переезду", "хочет жить в городе", "хочет жить за городом", "готова к отношениям на расстоянии", "разделяет жизненные твои ценности", "уважает отличающиеся убеждения", "готова обсуждать совместное будущее", "принимает твои возрастные изменения", "любит мужчин с бородой", "любит гладко выбритых мужчин", "любит мужчин с животиком", "любит подкачанных мужчин", "ценит нежность в мужчине", "ценит мужское чувство юмора", "умеет выбирать арбуз", "смеётся над твоими шутками даже когда они прошли технический осмотр со скрипом", "умеет собирать мебель вместе не превращая инструкцию в повод для развода", "знает что последний кусочек пиццы лучше обсуждать заранее", "может найти вещь которую ты искал прямо перед собой"];
+  const negativeSource = ["Неухоженная", "неряшливо одета", "неприятно пахнет", "имеет неприятный запах изо рта", "редко моется", "не следит за чистотой одежды", "имеет грязные ногти", "имеет заметные проблемы с зубами", "имеет лишний вес", "очень худая", "сутулая", "курит", "злоупотребляет алкоголем", "употребляет наркотики", "зависима от азартных игр", "навязчиво сидит в социальных сетях в ущерб отношениям", "зависима от покупок в ущерб бюджету", "опасно водит автомобиль", "водит в нетрезвом состоянии", "не имеет автомобиля", "не имеет недвижимости", "не имеет собственного жилья", "финансово зависит от тебя без договорённости", "не имеет постоянного дохода", "безработная и не ищет работу", "работает без меры и не уделяет времени близким", "не имеет накоплений", "скрывает долги", "имеет просроченные долги", "тратит больше доходов", "бездумно рискует общими деньгами", "скрывает крупные расходы", "требует дорогих подарков", "оценивает людей только по достатку", "считает что ты обязан оплачивать всё без обсуждения", "сравнивает твой доход с доходами других мужчин", "финансово контролирует тебя", "жадная", "живёт за чужой счёт", "уклоняется от согласованных общих расходов", "не умеет планировать бюджет", "живёт с родителями и полностью зависит от них", "позволяет родственникам вмешиваться в отношения", "зависит от мнения родителей в решениях пары", "враждебна к твоей семье", "не уважает твоих друзей", "изолирует тебя от близких", "не имеет близких друзей", "постоянно конфликтует с окружающими", "грубит обслуживающему персоналу", "унижает людей с меньшим доходом", "имеет плохую репутацию", "поддерживает дружбу с людьми которые поощряют измены или насилие", "не умеет поддерживать дружбу", "не заботится о собственных вещах", "не убирает за собой", "создаёт антисанитарию", "копит ненужный хлам", "перекладывает весь быт на тебя", "отказывается обсуждать разделение обязанностей", "оставляет после себя грязь", "не умеет готовить даже простую еду", "не умеет обращаться с бытовой техникой", "не умеет организовать своё время", "постоянно опаздывает", "забывает договорённости", "не держит слово", "ненадёжная", "безответственная", "несамостоятельная", "нерешительная", "безынициативная", "импульсивная", "легкомысленная", "непредсказуемая в важных вопросах", "не доводит дела до конца", "избегает трудностей", "перекладывает ответственность на других", "винит всех вокруг в своих неудачах", "не признаёт ошибок", "не умеет извиняться", "не принимает обратную связь", "даёт обещания которые не собирается выполнять", "лживая", "скрывает важные для отношений обстоятельства", "двуличная", "лицемерная", "манипулирует чувством вины", "обесценивает твои чувства", "высмеивает твою уязвимость", "искажает факты чтобы заставить сомневаться в себе", "провоцирует ревность", "намеренно игнорирует в наказание", "угрожает расставанием во время каждой ссоры", "шантажирует", "контролирующая", "чрезмерно ревнивая", "проверяет телефон без согласия", "требует пароли от личных аккаунтов", "запрещает общаться с друзьями", "навязывает свою волю", "не уважает личные границы", "не принимает отказ", "давит на тебя в интимной сфере", "игнорирует согласие", "склонна к психологическому насилию", "склонна к физическому насилию", "угрожает насилием", "жестока к животным", "груба с детьми", "агрессивная", "вспыльчивая", "мстительная", "злопамятная", "обидчивая", "конфликтная", "скандальная", "грубая", "высокомерная", "самовлюблённая", "эгоистичная", "равнодушная", "черствая", "эмоционально недоступная", "чрезмерно навязчивая", "не умеет слушать", "постоянно перебивает", "говорит только о себе", "не интересуется твоей жизнью", "не замечает твоих потребностей", "высмеивает твои увлечения", "не поддерживает тебя в трудные моменты", "завидует твоим успехам", "конкурирует с партнёром вместо сотрудничества", "не уважает твоё мнение", "не уважает твою карьеру", "требует постоянного восхищения", "нуждается в непрерывных доказательствах любви", "болезненно зависит от чужого одобрения", "избегает серьёзных разговоров", "замалчивает проблемы", "копит недовольство", "ждёт чтения мыслей вместо прямого разговора", "не умеет договариваться", "общается пассивно-агрессивно", "использует сарказм чтобы ранить", "высмеивает чужие чувства", "не умеет сочувствовать", "постоянно жалуется", "хронически пессимистичная", "занудная", "не понимает шуток", "шутит унизительно", "публично высмеивает тебя", "изменяет", "флиртует с другими вопреки договорённостям", "скрывает параллельные отношения", "не готова к серьёзным отношениям", "не хочет создавать семью", "хочет детей когда ты их не хочешь", "не хочет детей когда ты их хочешь", "уже имеет детей", "не имеет детей", "была замужем", "не была замужем", "часто меняет партнёров", "не имеет опыта длительных отношений", "не завершила прошлые отношения", "постоянно сравнивает тебя с бывшим", "навязчиво рассказывает о бывших", "общается с бывшим в некомфортном для тебя формате", "скрывает общение с бывшим", "враждует со всеми бывшими партнёрами", "имеет конфликтные отношения с отцом своих детей", "не участвует в жизни собственных детей", "уклоняется от обязательств перед детьми", "требует чтобы ты заменил её детям отца без обсуждения", "не принимает твоих детей", "не заботится о сексуальном здоровье", "игнорирует контрацепцию", "скрывает инфекцию значимую для сексуального здоровья", "не учитывает твои желания в постели", "не желает обсуждать интимные предпочтения", "использует близость как средство наказания", "высмеивает твоё тело", "сравнивает твою внешность с чужой", "требует соответствовать недостижимым стандартам", "сексуально несовместима с партнёром", "имеет несовпадающее с партнёром либидо", "не любит объятия которые важны тебе", "не проявляет романтической инициативы", "забывает важные для пары даты", "не интересуется совместным досугом", "не желает жить с домашними твоими животными", "не готова к переезду когда это важно тебе", "хочет жить в городе когда ты хочешь за город", "не готова к отношениям на расстоянии", "придерживается несовместимых с партнёром ценностей", "навязывает религиозные взгляды", "высмеивает твои убеждения", "дискриминирует людей по полу", "презирает мужчин", "считает себя всегда правой", "не готова обсуждать разногласия во взглядах", "не стремится узнавать новое", "не интересуется окружающим миром", "распространяет заведомую ложь", "навязывает близким теории заговора", "не умеет критически оценивать информацию", "безрассудно рискует безопасностью близких", "пренебрегает лечением", "скрывает значимые для тебя сведения о здоровье", "имеет хроническое заболевание влияющее на совместную жизнь", "имеет инвалидность требующую значительной адаптации совместного быта", "отсутствует конечность", "храпит", "часто и громко выпускает газы", "не прикрывает рот при кашле", "неаккуратно ест", "оставляет мокрое полотенце на кровати", "доедает последний кусок не предложив поделиться", "объявляет войну носкам под диваном без предъявления ультиматума", "устраивает допрос холодильнику из-за пропавшего десерта", "считает мем полноценным извинением", "заменяет разговор о проблеме загадочным «сам догадайся»", "фотографирует ужин пока он окончательно не остынет", "считает что инструкция к мебели написана для слабаков"];
+  const pageSize = 5;
+  const nodes = { positive: document.getElementById('positive-options'), negative: document.getElementById('negative-options'), result: document.getElementById('result'), progress: document.getElementById('progress'), count: document.getElementById('pairs-count'), copy: document.getElementById('copy'), status: document.getElementById('status') };
+  let positives, negatives, pages, selected, pairs, transitionTimer, transitioning = false;
+  const nextButtons = { positive: document.getElementById('positive-next'), negative: document.getElementById('negative-next') };
+
+  function shuffle(items) {
+    const result = [...items];
+    for (let i = result.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [result[i], result[j]] = [result[j], result[i]]; }
+    return result;
+  }
+  function reset() { clearTimeout(transitionTimer); transitioning = false; [nodes.positive, nodes.negative].forEach(node => node.classList.remove('leaving', 'entering')); positives = shuffle(positiveSource); negatives = shuffle(negativeSource); pages = { positive: 0, negative: 0 }; selected = {}; pairs = []; nodes.status.textContent = ''; render(); }
+  function drawOptions(container, items, type) {
+    container.replaceChildren();
+    items.forEach((item, index) => {
+      const label = document.createElement('label'); label.className = 'option';
+      const hue = type === 'positive' ? Math.floor(Math.random() * 62) : 175 + Math.floor(Math.random() * 105);
+      label.style.setProperty('--option-color', `hsl(${hue} 70% ${92 + Math.floor(Math.random() * 4)}%)`);
+      const input = document.createElement('input'); input.type = 'radio'; input.name = type; input.value = String(index); input.checked = selected[type] === item;
+      input.addEventListener('click', () => {
+        if (!transitioning && selected[type] === item) {
+          input.checked = false;
+          delete selected[type];
+        }
+      });
+      input.addEventListener('change', () => choose(type, item));
+      const text = document.createElement('span'); text.textContent = item;
+      label.append(input, text); container.append(label);
+    });
+  }
+  function choose(type, item) {
+    if (transitioning) return;
+    selected[type] = item;
+    if (selected.positive && selected.negative) {
+      const positive = selected.positive.charAt(0).toLocaleUpperCase('ru-RU') + selected.positive.slice(1);
+      pairs.push(`${positive}, но ${selected.negative.toLocaleLowerCase('ru-RU')}.`);
+      advance(['positive', 'negative']);
+    }
+  }
+  function advance(types) {
+    if (transitioning) return;
+    transitioning = true;
+    const lists = types.map(type => nodes[type]);
+    Object.values(nextButtons).forEach(button => { button.disabled = true; });
+    [nodes.positive, nodes.negative].forEach(node => node.querySelectorAll('input').forEach(input => { input.disabled = true; }));
+    lists.forEach(node => { node.classList.remove('entering'); node.classList.add('leaving'); });
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    transitionTimer = setTimeout(() => {
+      types.forEach(type => { pages[type]++; delete selected[type]; });
+      render();
+      lists.forEach(node => { node.classList.remove('leaving'); if (!reducedMotion) node.classList.add('entering'); });
+      transitioning = false;
+    }, reducedMotion ? 0 : 380);
+  }
+  Object.keys(nextButtons).forEach(type => nextButtons[type].addEventListener('click', () => advance([type])));
+  function render() {
+    const positivePage = positives.slice(pages.positive * pageSize, (pages.positive + 1) * pageSize);
+    const negativePage = negatives.slice(pages.negative * pageSize, (pages.negative + 1) * pageSize);
+    drawOptions(nodes.positive, positivePage, 'positive');
+    drawOptions(nodes.negative, negativePage, 'negative');
+    for (const [type, items, source] of [['positive', positivePage, positives], ['negative', negativePage, negatives]]) {
+      if (!items.length) nodes[type].textContent = 'Варианты закончились.';
+      const exhausted = (pages[type] + 1) * pageSize >= source.length;
+      nextButtons[type].disabled = exhausted;
+      nextButtons[type].textContent = exhausted ? 'Свойств больше нет' : 'Далее';
+    }
+    nodes.progress.textContent = `Слева ${positivePage.length}, справа ${negativePage.length} вариантов`;
+    nodes.count.textContent = `Выбрано пар: ${pairs.length}`;
+    nodes.result.textContent = pairs.length ? pairs.join(' ') : 'Пока здесь пусто. Выберите по одному качеству в каждой колонке.';
+    nodes.result.classList.toggle('empty', !pairs.length);
+    nodes.copy.disabled = !pairs.length;
+  }
+  document.getElementById('restart').addEventListener('click', reset);
+  nodes.copy.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(nodes.result.textContent); nodes.status.textContent = 'Результат скопирован.'; }
+    catch { nodes.status.textContent = 'Не удалось скопировать автоматически. Выделите и скопируйте текст вручную.'; }
+  });
+  reset();
+</script>
+</body>
+</html>
