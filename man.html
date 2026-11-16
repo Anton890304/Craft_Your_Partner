@@ -81,7 +81,7 @@
   </div>
   <div class="progress"><span id="progress"></span><span id="pairs-count"></span></div>
   <section class="card result" aria-labelledby="result-title">
-    <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
+    <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="story" type="button" disabled>Создать историю с ИИ</button><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
     <div id="result" class="result-text empty" aria-live="polite">Пока здесь пусто. Выберите по одному качеству в каждой колонке.</div>
     <p class="status" id="status" role="status"></p>
   </section>
@@ -160,7 +160,15 @@
     nodes.result.textContent = pairs.length ? pairs.join(' ') : 'Пока здесь пусто. Выберите по одному качеству в каждой колонке.';
     nodes.result.classList.toggle('empty', !pairs.length);
     nodes.copy.disabled = !pairs.length;
+    document.getElementById('story').disabled = !pairs.length;
   }
+  document.getElementById('story').addEventListener('click', () => {
+    const prompt = `Напиши увлекательную и забавную историю любви двух взрослых: парня с перечисленными ниже качествами и девушки, не называя её имени. Используй выбранные качества как материал для сюжета, а не просто перечисляй их. Добавь юмор, трогательные моменты, неожиданный поворот и немного пикантности без откровенных подробностей. Уважительно обращайся с чувствительными особенностями персонажей. Качества: ${pairs.join(' ')}`;
+    const url = new URL('https://www.google.com/search');
+    url.searchParams.set('udm', '50');
+    url.searchParams.set('q', prompt);
+    window.open(url.toString(), '_blank', 'noopener,noreferrer');
+  });
   document.getElementById('restart').addEventListener('click', reset);
   nodes.copy.addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(nodes.result.textContent); nodes.status.textContent = 'Результат скопирован.'; }
