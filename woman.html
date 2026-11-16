@@ -170,7 +170,7 @@
   document.getElementById('story').addEventListener('click', () => {
     const yours = document.getElementById('your-name').value.trim();
     const partner = document.getElementById('partner-name').value.trim();
-    const characters = `девушки${yours ? ` по имени ${yours}` : ' без указанного имени'}, которая встретила парня${partner ? ` по имени ${partner}` : ' без указанного имени'}. Перечисленные качества относятся к девушке`;
+    const characters = `девушки${partner ? ` по имени ${partner}` : ' без указанного имени'}, которая встретила парня${yours ? ` по имени ${yours}` : ' без указанного имени'}. Перечисленные качества относятся к девушке`;
     const prompt = `Напиши увлекательную и забавную историю любви двух взрослых: ${characters}. Если имя персонажа не указано, не придумывай ему имя. Используй выбранные качества как материал для сюжета, а не просто перечисляй их. Добавь юмор, трогательные моменты, неожиданный поворот и немного пикантности без откровенных подробностей. Уважительно обращайся с чувствительными особенностями персонажей. Качества: ${pairs.join(' ')}`;
     const url = new URL('https://www.google.com/search');
     url.searchParams.set('udm', '50');
