@@ -49,6 +49,15 @@
     .names label { display: grid; gap: 6px; flex: 1 1 160px; color: #ddd2df; font-size: 13px; }
     .names input { width: 100%; height: auto; min-height: 40px; padding: 9px 11px; border: 1px solid #695d70; border-radius: 9px; background: #413648; color: white; font: inherit; }
     .names input::placeholder { color: #b9adbd; }
+    .story-settings { margin-top: 20px; display: grid; gap: 16px; }
+    .story-settings fieldset { margin: 0; padding: 0; border: 0; }
+    .story-settings legend, .story-settings > label { font-weight: 600; margin-bottom: 8px; }
+    .character-options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+    .character-options label { display: flex; align-items: center; gap: 7px; padding: 8px 10px; border: 1px solid #695d70; border-radius: 9px; cursor: pointer; font-size: 14px; }
+    .character-options label:has(input:checked) { background: #594263; border-color: #d38bff; }
+    .character-options label:has(input:disabled) { opacity: .45; cursor: default; }
+    .story-settings select { display: block; width: 100%; max-width: 360px; margin-top: 8px; padding: 10px; border: 1px solid #695d70; border-radius: 9px; background: #413648; color: white; font: inherit; }
+    #story { margin-top: 18px; }
     .status { min-height: 20px; margin: 12px 0 0; font-size: 13px; color: #d9ccd9; }
     .progress { display: flex; justify-content: space-between; gap: 10px; margin: 18px 0 0; color: #8b828d; font-size: 13px; }
     @media (max-width: 700px) {
@@ -72,7 +81,7 @@
 <main>
   <div class="eyebrow">Интерактивный тренажёр</div>
   <h1>Конструктор качеств партнёрши</h1>
-  <p class="intro">Выберите одно достоинство и один недостаток женщины. Пара появится внизу, а списки обновятся автоматически. Здесь нет правильных ответов — важны ваши предпочтения.</p>
+  <p class="intro">Выберите одно достоинство и один недостаток женщины. Пара появится внизу, а списки обновятся автоматически. Здесь нет правильных ответов — важны ваши предпочтения. После того как вы соберёте качества партнёрши, можно создать интересную историю про вас и вашу партнёршу — увлекательное и незабываемое чтение на пять минут.</p>
   <div class="columns">
     <section class="card positive" aria-labelledby="positive-title">
       <div class="card-head"><div><h2 id="positive-title">Достоинства</h2><p class="hint">Выберите одно качество</p></div><span class="badge">+ Плюс</span></div>
@@ -87,10 +96,33 @@
   </div>
   <div class="progress"><span id="progress"></span><span id="pairs-count"></span></div>
   <section class="card result" aria-labelledby="result-title">
-    <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="story" type="button" disabled>🤖 Создать историю с ИИ</button><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
-    <div class="names"><label>Ваше имя <input id="your-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="given-name"></label><label>Имя вашей партнёрши <input id="partner-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="off"></label></div>
+    <div class="result-head"><div><h2 id="result-title">Ваш результат</h2><p class="hint">Выбранные пары собираются здесь</p></div><div class="actions"><button id="copy" type="button" disabled>Скопировать</button><button id="restart" type="button">Начать заново</button></div></div>
+
     <div id="result" class="result-text empty" aria-live="polite">Пока здесь пусто. Выберите по одному качеству в каждой колонке.</div>
     <p class="status" id="status" role="status"></p>
+  </section>
+  <section class="card result story-card" aria-labelledby="story-title">
+    <h2 id="story-title">Создать историю</h2>
+    <p class="hint">Добавьте имена, персонажей и выберите стиль истории</p>
+    <div class="names"><label>Ваше имя <input id="your-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="given-name"></label><label>Имя вашей партнёрши <input id="partner-name" type="text" maxlength="80" placeholder="Необязательно" autocomplete="off"></label></div>
+    <div class="story-settings">
+      <fieldset><legend>Дополнительные персонажи</legend><p class="hint" id="character-hint">Можно выбрать до пяти персонажей</p>
+        <div class="character-options">
+          <label><input type="checkbox" name="extra-character" value="цыгане"> 🎻 Цыгане</label>
+          <label><input type="checkbox" name="extra-character" value="инопланетяне"> 👽 Инопланетяне</label>
+          <label><input type="checkbox" name="extra-character" value="алкаши"> 🍻 Алкаши</label>
+          <label><input type="checkbox" name="extra-character" value="токсичные родственники"> 🙄 Токсичные родственники</label>
+          <label><input type="checkbox" name="extra-character" value="полиция"> 👮 Полиция</label>
+          <label><input type="checkbox" name="extra-character" value="полтергейст"> 👻 Полтергейст</label>
+          <label><input type="checkbox" name="extra-character" value="маньяк"> 🔪 Маньяк</label>
+          <label><input type="checkbox" name="extra-character" value="мафия"> 🕴️ Мафия</label>
+        </div>
+      </fieldset>
+      <label for="story-style">Стиль истории<select id="story-style">
+        <option value="">На усмотрение ИИ</option><option>Комедия</option><option>Полный трэш и угар</option><option>True crime</option><option>Ужастик</option><option>Мистика</option><option>Sci-Fi</option><option>Сплетни между подругами</option><option>Протокол следователя</option>
+      </select></label>
+    </div>
+    <button id="story" type="button" disabled>🤖 Создать историю с ИИ</button>
   </section>
 </main>
 <script>
@@ -107,7 +139,14 @@
     for (let i = result.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [result[i], result[j]] = [result[j], result[i]]; }
     return result;
   }
-  function reset() { clearTimeout(transitionTimer); transitioning = false; [nodes.positive, nodes.negative].forEach(node => node.classList.remove('leaving', 'entering')); positives = shuffle(positiveSource); negatives = shuffle(negativeSource); pages = { positive: 0, negative: 0 }; selected = {}; pairs = []; nodes.status.textContent = ''; render(); }
+  const extraCharacters = [...document.querySelectorAll('input[name="extra-character"]')];
+  function updateCharacterLimit() {
+    const count = extraCharacters.filter(input => input.checked).length;
+    extraCharacters.forEach(input => { input.disabled = count >= 5 && !input.checked; });
+    document.getElementById('character-hint').textContent = `Выбрано: ${count} из 5`;
+  }
+  extraCharacters.forEach(input => input.addEventListener('change', updateCharacterLimit));
+  function reset() { extraCharacters.forEach(input => { input.checked = false; }); updateCharacterLimit(); document.getElementById('story-style').value = ''; clearTimeout(transitionTimer); transitioning = false; [nodes.positive, nodes.negative].forEach(node => node.classList.remove('leaving', 'entering')); positives = shuffle(positiveSource); negatives = shuffle(negativeSource); pages = { positive: 0, negative: 0 }; selected = {}; pairs = []; nodes.status.textContent = ''; render(); }
   function drawOptions(container, items, type) {
     container.replaceChildren();
     items.forEach((item, index) => {
@@ -172,8 +211,10 @@
   document.getElementById('story').addEventListener('click', () => {
     const yours = document.getElementById('your-name').value.trim();
     const partner = document.getElementById('partner-name').value.trim();
-    const characters = `девушки${partner ? ` по имени ${partner}` : ' без указанного имени'}, которая встретила парня${yours ? ` по имени ${yours}` : ' без указанного имени'}. Перечисленные качества относятся к девушке`;
-    const prompt = `Напиши увлекательную и забавную историю любви двух взрослых: ${characters}. Если имя персонажа не указано, не придумывай ему имя. Используй выбранные качества как материал для сюжета, а не просто перечисляй их. Добавь юмор, трогательные моменты, неожиданный поворот и немного пикантности без откровенных подробностей. Уважительно обращайся с чувствительными особенностями персонажей. Качества: ${pairs.join(' ')}`;
+    const characters = `мужчины${yours ? ` по имени ${yours}` : ' без указанного имени'}, который встретил девушку${partner ? ` по имени ${partner}` : ' без указанного имени'}. Перечисленные качества относятся к женщине`;
+    const extras = extraCharacters.filter(input => input.checked).map(input => input.value);
+    const style = document.getElementById('story-style').value;
+    const prompt = `Напиши увлекательную историю любви двух взрослых: ${characters}: ${pairs.join(' ')} Используй выбранные качества как материал для сюжета, а не просто перечисляй их. Добавь неожиданный поворот и при необходимости немного пикантности, при необходимости откровенные сцены 18+. ${style ? `Стиль истории: ${style}. ` : ''}${extras.length ? `Включи в сюжет дополнительных персонажей: ${extras.join(', ')}. ` : ''}Если имя персонажа не указано, не придумывай ему имя.`;
     const url = new URL('https://www.google.com/search');
     url.searchParams.set('udm', '50');
     url.searchParams.set('q', prompt);
